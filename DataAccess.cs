@@ -9,7 +9,7 @@ using MySql.Data.MySqlClient;
 namespace DAT602_tester
 {
     class DataAccess
-    {
+    { 
         private static string connectionString
         {
             get { return "Server=localhost;Port=3306;Database=sapodb;Uid=sapo;password=53211;"; }
