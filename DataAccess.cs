@@ -9,29 +9,30 @@ using MySql.Data.MySqlClient;
 namespace DAT602_tester
 {
     class DataAccess
-    { 
+    {
         private static string connectionString
         {
             get { return "Server=localhost;Port=3306;Database=sapodb;Uid=sapo;password=53211;"; }
-            
+
         }
 
         private static MySqlConnection _mySqlConnection = null;
         public static MySqlConnection mySqlConnection
         {
-            get {
+            get
+            {
                 if (_mySqlConnection == null)
                 {
                     _mySqlConnection = new MySqlConnection(connectionString);
                 }
 
                 return _mySqlConnection;
-                
-            }  
+
+            }
         }
         public string AddUserName(string pUserName)
         {
-            //MySqlConnection mySqlConnection = new MySqlConnection(connectionString);
+            
             List<MySqlParameter> p = new List<MySqlParameter>();
             var aP = new MySqlParameter("@UserName", MySqlDbType.VarChar, 50);
             aP.Value = pUserName;
@@ -42,6 +43,21 @@ namespace DAT602_tester
 
             // expecting one table with one row
             return (aDataSet.Tables[0].Rows[0])["MESSAGE"].ToString();
+        }
+    
+        public List<Player> GetAllPlayers()
+        {
+            List<Player> lcPlayers = new List<Player>();
+
+            var aDataSet = MySqlHelper.ExecuteDataset(DataAccess.mySqlConnection, "call GetAllPlayers()");
+            lcPlayers = (from aResult in aDataSet.Tables[0].AsEnumerable()  
+                         select
+                            new Player {  UserName = aResult.Field<string>("UserName"),
+                                          Strength = aResult.Field<int>("Strength"),
+                                          X = aResult.Field<int>("x"),
+                                          Y = aResult.Field<int>("y")
+                            }).ToList();
+            return lcPlayers;
         }
     }
 }
