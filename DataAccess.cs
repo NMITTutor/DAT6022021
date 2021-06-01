@@ -50,7 +50,7 @@ namespace DAT602_tester
             List<Player> lcPlayers = new List<Player>();
 
             var aDataSet = MySqlHelper.ExecuteDataset(DataAccess.mySqlConnection, "call GetAllPlayers()");
-            lcPlayers = (from aResult in aDataSet.Tables[0].AsEnumerable()  
+            lcPlayers = (from aResult in  System.Data.DataTableExtensions.AsEnumerable(aDataSet.Tables[0])
                          select
                             new Player {  UserName = aResult.Field<string>("UserName"),
                                           Strength = aResult.Field<int>("Strength"),
