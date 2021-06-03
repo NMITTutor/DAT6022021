@@ -45,22 +45,21 @@ namespace DAT602_tester
             return (aDataSet.Tables[0].Rows[0])["MESSAGE"].ToString();
         }
     
-        public DataTable GetAllPlayers()
+        public  List<Player>  GetAllPlayers()
         {
-           List<Player> lcPlayers = new List<Player>();
+            List<Player> lcPlayers = new List<Player>();
 
             var aDataSet = MySqlHelper.ExecuteDataset(DataAccess.mySqlConnection, "call GetAllPlayers()");
-/*            lcPlayers = (from aResult in System.Data.DataTableExtensions.AsEnumerable(aDataSet.Tables[0])
+            lcPlayers = (from aResult in
+                                    System.Data.DataTableExtensions.AsEnumerable(aDataSet.Tables[0])
                          select
                             new Player
                             {
-                                UserName = aResult.Field<string>("UserName"),
-                                Strength = aResult.Field<int>("Strength"),
-                                X = aResult.Field<int>("x"),
-                                Y = aResult.Field<int>("y")
+                                UserName = aResult["UserName"].ToString(),
+                                Strength = Convert.ToInt32(aResult["Strength"]),
+                                X = Convert.ToInt32(aResult["x"]),
+                                Y = Convert.ToInt32(aResult["y"])
                             }).ToList();
-            */
-            return aDataSet.Tables[0];
-        }
+            return lcPlayers;
     }
 }
